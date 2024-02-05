@@ -24,6 +24,21 @@ namespace BusinessLogic
             _userStorage.Create(model, data);
         }
 
+        public List<UserViewModel> GetActiveUserOrderByAsc(AuthData data)
+        {
+            return _userStorage.GetActiveUserOrderByAsc(data);
+        }
+
+        public UserViewModelWithActiveStatus GetUserDataWithStatus(AuthData data, string Login)
+        {
+            return _userStorage.GetUserDataWithStatus(data, Login);
+        }
+
+        public List<UserViewModel> GetUsersOverAge(AuthData data, int Age)
+        {
+            return _userStorage.GetUsersOverAge(data, Age);
+        }
+
         public void HardDelete(AuthData data, string Login)
         {
             _userStorage.HardDelete(data, Login);

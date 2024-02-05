@@ -27,8 +27,8 @@ namespace ListStorage
                 "Admin",
                 new DateTime(2015, 7, 20, 18, 30, 25), 
                 "Admin",
-                new DateTime(2015, 7, 20, 18, 30, 25), 
-                "Admin");
+                null, 
+                null);
             Users.Add(user1);
         }
         public static DataListSingleton GetInstance()

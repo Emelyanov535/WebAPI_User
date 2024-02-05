@@ -13,8 +13,10 @@ namespace Contracts.BusiniesLogicContracts
     {
         List<UserViewModel>? ReadList();
         void Create(CreateUserBindingModel model, AuthData data);
-
         void SoftDelete(AuthData data, string Login);
         void HardDelete(AuthData data, string Login);
+        List<UserViewModel> GetActiveUserOrderByAsc(AuthData data);
+        UserViewModelWithActiveStatus GetUserDataWithStatus(AuthData data, string Login);
+        List<UserViewModel> GetUsersOverAge(AuthData data, int Age);
     }
 }

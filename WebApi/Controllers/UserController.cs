@@ -39,5 +39,22 @@ namespace WebApi.Controllers
             _logic.HardDelete(data, Login);
         }
 
+        [HttpGet]
+        public List<UserViewModel> GetActiveUserOrderByAsc(AuthData data)
+        {
+            return _logic.GetActiveUserOrderByAsc(data);
+        }
+
+        [HttpGet]
+        public UserViewModelWithActiveStatus GetUserWithActiveStatus(AuthData data, string Login) {
+            return _logic.GetUserDataWithStatus(data, Login);
+        }
+
+        [HttpGet]
+        public List<UserViewModel> GetUsersOverAge(AuthData data, int Age)
+        {
+            return _logic.GetUsersOverAge(data, Age);
+        }
+
     }
 }

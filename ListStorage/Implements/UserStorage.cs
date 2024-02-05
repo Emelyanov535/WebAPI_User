@@ -33,7 +33,7 @@ namespace ListStorage.Implements
         private bool isAdmin(UserSearchModelByLoginAndPassword model)
         {
             UserViewModel? user = _source.Users.FirstOrDefault(x => x.Login == model.Login)?.GetViewModel;
-            if(user != null && user.Password == model.Password && user.Admin == true)
+            if (user != null && user.Password == model.Password && user.Admin == true)
             {
                 return true;
             }
@@ -72,7 +72,7 @@ namespace ListStorage.Implements
             if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)))
             {
                 User? user = getUserByLogin(Login);
-                if(user != null)
+                if (user != null)
                 {
                     user.RevokedOn = DateTime.Now;
                     user.RevokedBy = data.LoginAuth;
@@ -89,6 +89,56 @@ namespace ListStorage.Implements
                 {
                     _source.Users.Remove(user);
                 }
+            }
+        }
+
+        public List<UserViewModel> GetActiveUserOrderByAsc(AuthData data)
+        {
+            if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)))
+            {
+                return GetUsers().Where(x => x.RevokedBy == null).OrderBy(x => x.CreatedOn).ToList();
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+        public UserViewModelWithActiveStatus GetUserDataWithStatus(AuthData data, string Login)
+        {
+            if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)))
+            {
+                User? user = getUserByLogin(Login);
+                if (user != null)
+                {
+                    return new UserViewModelWithActiveStatus(
+                        user.Name,
+                        user.Gender,
+                        user.Birthday,
+                        user.RevokedBy == null ? true : false
+                    );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public List<UserViewModel> GetUsersOverAge(AuthData data, int Age)
+        {
+            if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)))
+            {
+                return (List<UserViewModel>)GetUsers().Where(x => (DateTime.Now.Year - x.Birthday?.Year) > Age);
+            }
+            else
+            {
+                return null;
             }
         }
     }
