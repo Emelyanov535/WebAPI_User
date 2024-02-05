@@ -6,7 +6,20 @@ using System.Threading.Tasks;
 
 namespace DataModels
 {
-    internal class User
+    public interface User
     {
+        int Guid { get; }
+        string Login { get; }
+        string Password { get; }
+        string Name {  get; }
+        Gender Gender { get; }
+        DateTime? Birthday { get; }
+        bool Admin {  get; }
+        DateTime CreatedOn { get; }
+        string CreatedBy {  get; }
+        DateTime ModifiedOn { get; }
+        string ModifiedBy { get; }
+        DateTime RevokedOn {  get; }
+        string RevokedBy { get; }
     }
 }
