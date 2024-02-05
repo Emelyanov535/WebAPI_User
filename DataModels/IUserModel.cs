@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataModels
 {
-    public interface User
+    public interface IUserModel
     {
-        int Guid { get; }
+        Guid Guid { get; }
         string Login { get; }
         string Password { get; }
         string Name {  get; }
@@ -19,7 +19,7 @@ namespace DataModels
         string CreatedBy {  get; }
         DateTime ModifiedOn { get; }
         string ModifiedBy { get; }
-        DateTime RevokedOn {  get; }
-        string RevokedBy { get; }
+        DateTime? RevokedOn {  get; }
+        string? RevokedBy { get; }
     }
 }
