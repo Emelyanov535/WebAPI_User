@@ -1,6 +1,7 @@
 ﻿using Contracts.BindingModels;
 using Contracts.BusiniesLogicContracts;
 using Contracts.ViewModels;
+using DataModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -56,5 +57,34 @@ namespace WebApi.Controllers
             return _logic.GetUsersOverAge(data, Age);
         }
 
+        [HttpGet]
+        public UserViewModel GetUserYorself(AuthData data, string login, string password)
+        {
+            return _logic.GetUserYourself(data, login, password);
+        }
+
+        [HttpPut]
+        public void RecoveryUser(AuthData data, string Login)
+        {
+            _logic.RecoveryUser(data, Login);
+        }
+
+        [HttpPut]
+        public void UpdateNameGenderDate(AuthData data, Guid id, string Name, Gender Gender, DateTime Birthday) 
+        {
+            _logic.UpdateNameGenderDate(data, id, Name, Gender, Birthday);
+        }
+
+        [HttpPut]
+        public void UpdateLogin(AuthData data, Guid id, string Login)
+        {
+            _logic.UpdateLogin(data, id, Login);
+        }
+
+        [HttpPut]
+        public void UpdatePassword(AuthData data, Guid id, string Password)
+        {
+            _logic.UpdateLogin(data, id, Password);
+        }
     }
 }

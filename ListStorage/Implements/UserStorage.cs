@@ -2,6 +2,7 @@
 using Contracts.SearchModels;
 using Contracts.StoragesContracts;
 using Contracts.ViewModels;
+using DataModels;
 using ListStorage.Models;
 using System;
 using System.Collections.Generic;
@@ -47,8 +48,28 @@ namespace ListStorage.Implements
         {
             return _source.Users.FirstOrDefault(x => x.Login == Login);
         }
+
+        private bool IsValidLogin(string login)
+        {
+            return System.Text.RegularExpressions.Regex.IsMatch(login, @"^[a-zA-Z0-9]+$");
+        }
+
+        private bool IsValidPassword(string password)
+        {
+            return System.Text.RegularExpressions.Regex.IsMatch(password, @"^[a-zA-Z0-9]+$");
+        }
+
+        private bool IsValidName(string name)
+        {
+            return System.Text.RegularExpressions.Regex.IsMatch(name, @"^[a-zA-Zа-яА-Я]+$");
+        }
         public void Create(CreateUserBindingModel model, AuthData data)
         {
+            if (_source.Users.Any(u => u.Login == model.Login) || !IsValidLogin(model.Login) || !IsValidPassword(model.Password) || !IsValidName(model.Name))
+            {
+                return;
+            }
+
             User user = new User(
                 Guid.NewGuid(),
                 model.Login,
@@ -130,15 +151,108 @@ namespace ListStorage.Implements
             }
         }
 
-        public List<UserViewModel> GetUsersOverAge(AuthData data, int Age)
+        public List<UserViewModel> GetUsersOverAge(AuthData data, int age)
         {
             if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)))
             {
-                return (List<UserViewModel>)GetUsers().Where(x => (DateTime.Now.Year - x.Birthday?.Year) > Age);
+                DateTime currentDate = DateTime.Now;
+                return GetUsers()
+                    .Where(x => x.Birthday != null && (currentDate - x.Birthday.Value).TotalDays / 365 > age)
+                    .ToList();
             }
             else
             {
                 return null;
+            }
+        }
+
+        public UserViewModel GetUserYourself(AuthData dataAuth, string login, string password)
+        {
+            if (dataAuth.LoginAuth == login && dataAuth.PasswordAuth == password)
+            {
+                User user = getUserByLogin(login);
+                if (user != null && dataAuth.PasswordAuth == user.Password && user.RevokedOn == null)
+                {
+                    return user.GetViewModel;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public void RecoveryUser(AuthData data, string Login)
+        {
+            if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)))
+            {
+                User user = getUserByLogin(Login);
+                if(user != null && user.RevokedOn != null && user.RevokedBy != null)
+                {
+                    user.RevokedOn = null;
+                    user.RevokedBy = null;
+                }
+            }
+        }
+
+        public void UpdateNameGenderDate(AuthData data, Guid id, string Name, Gender Gender, DateTime Birthday)
+        {
+            User user = _source.Users.FirstOrDefault(x => x.Guid == id);
+            if (user != null)
+            {
+                if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)) || user.Login == data.LoginAuth)
+                {
+                    if(user.RevokedOn == null)
+                    {
+                        user.Name = Name;
+                        user.Gender = Gender;
+                        user.Birthday = Birthday;
+                        user.ModifiedOn = DateTime.Now;
+                        user.ModifiedBy = data.LoginAuth;
+                    }
+                }
+
+            }
+        }
+
+        public void UpdateLogin(AuthData data, Guid id, string Login)
+        {
+            User user = _source.Users.FirstOrDefault(x => x.Guid == id);
+            if (user != null)
+            {
+                if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)) || user.Login == data.LoginAuth)
+                {
+                    if (_source.Users.All(u => u.Login != Login))
+                    {
+                        if (user.RevokedOn == null)
+                        {
+                            user.ModifiedOn = DateTime.Now;
+                            user.ModifiedBy = data.LoginAuth;
+                            user.Login = Login;
+                        }
+                    }               
+                }
+            }
+        }
+
+        public void UpdatePassword(AuthData data, Guid id, string Password)
+        {
+            User user = _source.Users.FirstOrDefault(x => x.Guid == id);
+            if (user != null)
+            {
+                if (isAdmin(new UserSearchModelByLoginAndPassword(data.LoginAuth, data.PasswordAuth)) || user.Login == data.LoginAuth)
+                {
+                    if (user.RevokedOn == null)
+                    {
+                        user.ModifiedOn = DateTime.Now;
+                        user.ModifiedBy = data.LoginAuth;
+                        user.Password = Password;
+                    }
+                }
             }
         }
     }

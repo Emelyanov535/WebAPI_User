@@ -12,15 +12,15 @@ namespace ListStorage.Models
     {
         public Guid Guid { get; private set; }
 
-        public string Login { get; private set; } = string.Empty;
+        public string Login { get; set; } = string.Empty;
 
-        public string Password { get; private set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
 
-        public string Name { get; private set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public Gender Gender { get; private set; }
+        public Gender Gender { get; set; }
 
-        public DateTime? Birthday { get; private set; }
+        public DateTime? Birthday { get; set; }
 
         public bool Admin { get; private set; }
 
@@ -28,9 +28,9 @@ namespace ListStorage.Models
 
         public string CreatedBy { get; private set; } = string.Empty;
 
-        public DateTime ModifiedOn { get; private set; }
+        public DateTime ModifiedOn { get; set; }
 
-        public string ModifiedBy { get; private set; } = string.Empty;
+        public string ModifiedBy { get; set; } = string.Empty;
 
         public DateTime? RevokedOn { get; set; }
 

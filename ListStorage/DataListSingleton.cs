@@ -17,7 +17,7 @@ namespace ListStorage
         {
             Users = new List<User>();
             User user1 = new User(Guid.NewGuid(), 
-                "admin@mail.ru", 
+                "Admin", 
                 "123",
                 "Admin",
                 DataModels.Gender.Male, 

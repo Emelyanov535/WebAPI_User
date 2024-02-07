@@ -3,6 +3,7 @@ using Contracts.BusiniesLogicContracts;
 using Contracts.SearchModels;
 using Contracts.StoragesContracts;
 using Contracts.ViewModels;
+using DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,11 @@ namespace BusinessLogic
             return _userStorage.GetUsersOverAge(data, Age);
         }
 
+        public UserViewModel GetUserYourself(AuthData dataAuth, string login, string password)
+        {
+            return _userStorage.GetUserYourself(dataAuth, login, password);
+        }
+
         public void HardDelete(AuthData data, string Login)
         {
             _userStorage.HardDelete(data, Login);
@@ -49,9 +55,29 @@ namespace BusinessLogic
             return _userStorage.GetUsers();
         }
 
+        public void RecoveryUser(AuthData data, string Login)
+        {
+            _userStorage.RecoveryUser(data, Login);
+        }
+
         public void SoftDelete(AuthData data, string Login)
         {
             _userStorage.SoftDelete(data, Login);
+        }
+
+        public void UpdateLogin(AuthData data, Guid id, string Login)
+        {
+            _userStorage.UpdateLogin(data, id, Login);
+        }
+
+        public void UpdateNameGenderDate(AuthData data, Guid id, string Name, Gender Gender, DateTime Birthday)
+        {
+            _userStorage.UpdateNameGenderDate(data, id, Name, Gender, Birthday);
+        }
+
+        public void UpdatePassword(AuthData data, Guid id, string Password)
+        {
+            _userStorage.UpdatePassword(data, id, Password);
         }
     }
 }
